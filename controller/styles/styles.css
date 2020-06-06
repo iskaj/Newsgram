@@ -1,0 +1,145 @@
+html {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: sans-serif;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#info {
+  text-align: center;
+  margin-top: 47vh;
+  color: #444444;
+  font-size: 3vw;
+}
+
+#controller-container {
+  width: 100%;
+  height: 100%;
+}
+
+.view, .view-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.portrait .view {
+  flex-wrap: wrap;
+}
+
+
+.section {
+  flex-grow: 1;
+  flex-basis: auto;
+  align-items: stretch;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 1%;
+}
+
+.section1 {
+  flex-grow: 1;
+  flex-basis: auto;
+  align-items: stretch;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 40px;
+}
+
+.section.horizontal {
+  flex-wrap: nowrap;
+}
+
+.landscape .section {
+  height: 100%;
+}
+
+.portrait .section {
+  flex-basis: 100%;
+}
+
+.element {
+  align-items: stretch;
+/*  flex-grow: 1;
+  flex-basis: auto;
+  align-items: stretch;
+  margin: auto;*/
+}
+
+.section-view-btn{
+  display: flex;
+  flex-direction: column; 
+}
+
+.section-view-btn .section{
+  height: auto;
+  width: 100%;
+}
+
+h3.section-header{
+  text-align: center;
+  padding-top: 20px;
+  color: white;
+  font-size: 3.7vw;
+  padding-right: 35px;
+  padding-left: 35px;
+}
+
+
+h3.teamname-header{
+  text-align: center;
+  color: #ADEE00;
+  font-size: 3vw;
+}
+
+h3.feedback-header{
+  text-align: center;
+  padding-top: 50px;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 100%;
+  color: white;
+  font-size: 3.8vw;
+  white-space: pre-line;
+}
+
+h3.feedback-header1{
+  text-align: center;
+  padding-top: 100px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: white;
+  font-size: 5vw;
+}
+
+.section-view-btn .button-element, .section-view-btn .button-300-150 {
+  position: relative;
+  height: 90%;
+  width: 100%;
+}
+
+.section-view-btn .button-element.height-50{
+  height: 50%;
+}
+
+.landscape .section.button-cluster{
+  height: 60%;
+}
+
+h3.headline-header{
+  text-align: center;
+  color: white;
+  font-size: 3.5vw
+}

@@ -1,0 +1,467 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
+    <title>AirConsole Controller</title>
+    <link href='https://fonts.googleapis.com/css?family=Play:400,700' rel='stylesheet' type='text/css'>
+    <!-- AirConsole-Controls -->
+    <link rel="stylesheet" type="text/css" href="airconsole-controls/button/button.css">
+    <link rel="stylesheet" type="text/css" href="airconsole-controls/dpad/dpad.css">
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="controller/styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="controller/styles/controls.css">
+    <link rel="stylesheet" href="airconsole-controls/keyboard/airconsole-keyboard.css">
+    <script type="text/javascript">
+        var TeamName;
+        var TeamNames = ["De Telegraaf", "De Gelderlander", "Algemeen Dagblad", "De Volkskrant", "Trouw", "Tubantia", "Metro", "De Stentor"]
+        var Topics = ["view-1-section-1-element-0", "view-1-section-1-element-1", "view-1-section-2-element-0", "view-1-section-2-element-1", "view-1-section-3-element-0", "view-1-section-3-element-1"];
+        var keyboard;
+        var feedback;
+        var rf_pf = ["Dit hebben jullie goed gedaan! Was het geluk of hebben jullie een weloverwogen beslissing genomen?", "Dit was een lastige hé? Aan welke elementen kan je zien of een bron echt of nep is?", "Goed dat jullie met de teamleden overlegd hebben! Zo kom je vaak tot het juiste antwoord."]
+        var rf_nf = ["Check de bron om erachter te komen of nieuws echt of nep is!", "Ga na of de titel geloofwaardig is; zou dit echt gebeurd kunnen zijn?"]
+        var s_pf = ["Goed dat jullie actief op het internet hebben gezocht! Hebben jullie meerdere bronnen bekeken? ", "Discussiëren helpt om het goede antwoord te vinden! Hebben jullie voldoende overlegd? ", "Netjes gedaan! Goed dat jullie de juiste informatie hebben gevonden op het internet!"]
+        var s_nf = ["https://www.factcheck.nl/ is een website die je kan gebruiken om betrouwbare bronnen te vinden!", "Let op: bekijk meerdere bronnen voordat je een goed antwoord kan formuleren."]
+        var picked = new Array();
+        function keyboard_init() {
+            keyboard = new AirConsoleKeyboard("my_keyboard");
+            keyboard.bind("textfield1", {
+                onShow: function (input_id) {
+                    console.log("onShow#1", input_id);
+                },
+                onChange: function (input_id, text, html) {
+                    console.log("onChange#1", input_id, text, html);
+                },
+                onDone: function (input_id, text, html) {
+                    console.log("onDone#1", input_id, text, html);
+                },
+                onHide: function (input_id, text, html) {
+                    console.log("onHide#1", input_id, text, html);
+                }
+            });
+        }
+
+        function disableButton(btn) {
+            var dbt = document.getElementById(btn.id);
+            dbt.style.pointerEvents = "none";
+            dbt.firstElementChild.style.color = "#ADEE00";
+
+        }
+
+        function disableButton_pt(btn) {
+            var dbt = document.getElementById(btn.id);
+            dbt.style.pointerEvents = "none";
+            document.getElementById(btn.id).style.visibility = 'hidden';
+            picked.push(btn.id);
+            if (picked.length == 3) {
+                for (i = 0; i < Topics.length; i++) {
+                    if (Topics[i] != picked[0] && Topics[i] != picked[1] && Topics[i] != picked[2]) {
+                        document.getElementById(Topics[i]).style.pointerEvents = "none";
+                    }
+                }
+                picked = [];
+            }
+        }
+
+        function disableButton_m(btn) {
+            document.getElementById(btn.id).style.visibility = 'hidden';
+        }
+
+        function pressed(btn) {
+            document.getElementById(btn.id).disableButton;
+            ViewManager.show("view-10");
+        }
+
+
+        function start() {
+            window.app = new App();
+            keyboard_init();
+        }
+
+
+
+    </script>
+
+</head>
+<body onload="start()">
+
+
+    <div id="controller-container" class="controller">
+
+
+        <div id="view-0" class="view section-view-btn">
+            <h3 class="section-header ">Wacht tot de andere teams verbinding hebben gemaakt &#9995</h3>
+            <h3 id="team-name" class="teamname-header"></h3>
+            <div id="view-0-section-0" class="section " style="height: 100%;">
+                <div id="view-0-section-0-element-0" class="button-300-150 button-element element" ontouchstart="disableButton(this)">
+                    <div class="button-text1">Ready</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-1" class="view" style="display: none;">
+            <h3 id="view-1-team-name" class="teamname"></h3>
+            <h3 class="section-header">Kies drie onderwerpen die je leuk vindt &#128076</h3>
+            <div id="view-1-section-0" class="section button-cluster" style="height: 65%">
+                <div id="view-1-section-1" class="section height-100">
+                    <div id="view-1-section-1-element-0" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Sport</div>
+                    </div>
+                    <div id="view-1-section-1-element-1" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Klimaat</div>
+                    </div>
+                </div>
+                <div id="view-1-section-2" class="section height-100">
+                    <div id="view-1-section-2-element-0" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Politiek</div>
+                    </div>
+                    <div id="view-1-section-2-element-1" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Show Business</div>
+                    </div>
+                </div>
+                <div id="view-1-section-3" class="section height-100">
+                    <div id="view-1-section-3-element-0" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Actueel Nieuws</div>
+                    </div>
+                    <div id="view-1-section-3-element-1" class="button-300-150 button-element element" ontouchstart="disableButton_pt(this)">
+                        <div class="button-text">Misdaad</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="view-2" class="view" style="display: none;">
+            <h3 id="view-2-team-name" class="teamname"></h3>
+            <h3 id="hurryup-rf" class="hurryup"></h3>
+            <h3 class="section-header">Echt of nep? &#9989 &#10060</h3>
+            <div id="view-2-section-0" class="section horizontal height-100">
+                <div id="view-2-section-0-element-0" class="button-300-150 button-element element height-50" ontouchstart="pressed(this)">
+                    <div class="button-text1">Echt</div>
+                </div>
+                <div id="view-2-section-1-element-0" class="button-300-150 button-element element height-50" ontouchstart="pressed(this)">
+                    <div class="button-text1">Nep</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="view-3" class="view section-view-btn">
+            <h3 id="view-3-team-name" class="teamname"></h3>
+            <div id="view-3-section-0" class="section " style="height: 100%;">
+                <h3 id="feedback-header" class="feedback-header "></h3>
+            </div>
+        </div>
+
+        <div id="view-4" class="view" style="display: none;">
+            <h3 id="view-4-team-name" class="teamname"></h3>
+            <h3 id="hurryup-hc" class="hurryup"></h3>
+            <div class="view-content">
+                <div id="view-4-section-0" class="section height-100">
+                    <div id="view-4-1" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">A</div>
+                    </div>
+                    <div id="view-4-4" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">D</div>
+                    </div>
+                    <div id="view-4-7" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">G</div>
+                    </div>
+                </div>
+                <div id="view-4-section-1" class="section height-100">
+                    <div id="view-4-2" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">B</div>
+                    </div>
+                    <div id="view-4-5" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">E</div>
+                    </div>
+                    <div id="view-4-8" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">H</div>
+                    </div>
+                </div>
+                <div id="view-4-section-2" class="section height-100">
+                    <div id="view-4-3" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">C</div>
+                    </div>
+                    <div id="view-4-6" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">F</div>
+                    </div>
+                    <div id="view-4-9" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                        <div class="button-text1">I</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-5" class="view" style="display: none;">
+            <h3 id="view-5-team-name" class="teamname"></h3>
+            <h3 id="hurryup-m" class="hurryup"></h3>
+            <h3 class="section-header">Kies de juiste volgorde!</h3>
+            <div class="view-content">
+                <div id="view-5-section-0" class="section horizontal height-100">
+                    <div id="view-5-1" class="button-300-150 button-element element height-40" ontouchstart="disableButton_m(this)">
+                        <div class="button-text1">A</div>
+                    </div>
+                </div>
+                <div id="view-5-section-1" class="section " style="height: 100%;">
+                    <div id="view-5-2" class="button-300-150 button-element element height-40" ontouchstart="disableButton_m(this)">
+                        <div class="button-text1">B</div>
+                    </div>
+                </div>
+                <div id="view-5-section-2" class="section horizontal height-100 " style="height: 100%;">
+                    <div id="view-5-3" class="button-300-150 button-element element height-40" ontouchstart="disableButton_m(this)">
+                        <div class="button-text1">C</div>
+                    </div>
+                </div>
+                <div id="view-5-section-3" class="section " style="height: 100%;">
+                    <div id="view-5-4" class="button-300-150 button-element element height-40" ontouchstart="disableButton_m(this)">
+                        <div class="button-text1">D</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-6" class="view section-view-btn">
+            <h3 id="view-6-team-name" class="teamname"></h3>
+            <div id="view-6-section-0" class="section " style="height: 100%">
+                <h3 class="feedback-header1 ">Lees het scherm voor een handige tip!</h3>
+            </div>
+        </div>
+
+
+        <div id="view-7" class="view" style="display: none;">
+            <h3 id="view-7-team-name" class="teamname"></h3>
+            <h3 id="hurryup-s" class="hurryup"></h3>
+            <h3 class="section-header">Zoek op het internet voor bronnen om het antwoord te vinden op de vraag op het scherm &#9989 &#10060</h3>
+            <div id="view-7-section-0" class="section horizontal height-100" style="height: 90%">
+                <div id="view-7-section-0-element-0" class="button-300-150 button-element element height-50" ontouchstart="pressed(this)">
+                    <div class="button-text1">Waar</div>
+                </div>
+                <div id="view-7-section-1-element-0" class="button-300-150 button-element element height-50" ontouchstart="pressed(this)">
+                    <div class="button-text1">Onwaar</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="view-8" class="view" style="display: none;">
+            <h3 id="view-8-team-name" class="teamname"></h3>
+            <h3 id="hurryup-h" class="hurryup"></h3>
+            <h3 class="headline-header">Voer hieronder een titel in &#128240</h3>
+            <div class="textfield-phone" id="textfield1"></div>
+            <button class="headline-button button-300-150" id="headlineOK" ontouchstart="text_message()">Antwoord versturen</button>
+            <div id="my_keyboard"></div>
+        </div>
+
+        <div id="view-9" class="view section-view-btn">
+            <h3 id="view-9-team-name" class="teamname"></h3>
+            <h3 class="section-header">Discussieer de vraag op het scherm met je team</h3>
+            <div id="view-9-section-0" class="section1 " style="height: 55%;">
+                <div id="view-9-section-0-element-0" class="button-300-150 button-element element" ontouchstart="pressed(this)">
+                    <div class="button-text1">We hebben het begrepen</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-10" class="view section-view-btn">
+            <h3 id="view-10-team-name" class="teamname"></h3>
+            <div id="view-10-section-0" class="section " style="height: 100%">
+                <h3 class="feedback-header1 ">Wacht tot de andere teams reageren! &#9995</h3>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+            var ctrl_data = '{"orientation":"landscape","selected_view_id":"view-0","views":[{"id":"view-0","sections":[{"id":"view-0-section-0","elements":[{"id":"view-0-section-0-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-0-section-0-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"Ready","send_onrelease":false,"message_data":[{"key":"1","value":"Ready"}]}}],"classes":[]}]},{"id":"view-1","sections":[{"id":"view-1-section-0","elements":[{"id":"view-1-section-1-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-1-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"A","send_onrelease":false,"message_data":[{"key":"1","value":"A"}]}},{"id":"view-1-section-1-element-1","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-1-element-1","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"D","send_onrelease":false,"message_data":[{"key":"1","value":"D"}]}}],"classes":[]},{"id":"view-1-section-2","elements":[{"id":"view-1-section-2-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-2-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"B","send_onrelease":false,"message_data":[{"key":"1","value":"B"}]}},{"id":"view-1-section-2-element-1","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-2-element-1","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"E","send_onrelease":false,"message_data":[{"key":"1","value":"E"}]}}],"classes":[]},{"id":"view-1-section-3","elements":[{"id":"view-1-section-3-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-3-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"C","send_onrelease":false,"message_data":[{"key":"1","value":"C"}]}},{"id":"view-1-section-3-element-1","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-1-section-3-element-1","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"F","send_onrelease":false,"message_data":[{"key":"1","value":"F"}]}}],"classes":[]}]},{"id":"view-2","sections":[{"id":"view-2-section-0","elements":[{"id":"view-2-section-0-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-2-section-0-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"Real","send_onrelease":false,"message_data":[{"key":"1","value":"Real"}]}}],"classes":[]},{"id":"view-2-section-1","elements":[{"id":"view-2-section-1-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-2-section-1-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"Fake","send_onrelease":false,"message_data":[{"key":"1","value":"Fake"}]}}],"classes":[]}]},{"id":"view-7","sections":[{"id":"view-7-section-0","elements":[{"id":"view-7-section-0-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-7-section-0-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"Waar","send_onrelease":false,"message_data":[{"key":"1","value":"Waar"}]}}],"classes":[]},{"id":"view-7-section-1","elements":[{"id":"view-7-section-1-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-7-section-1-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"Onwaar","send_onrelease":false,"message_data":[{"key":"1","value":"Onwaar"}]}}],"classes":[]}]},{"id":"view-3","sections":[{"id":"view-3-section-0","elements":[],"classes":[]}]},{"id":"view-4","sections":[{"id":"view-4-section-0","elements":[{"id":"view-4-1","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-1","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"A","send_onrelease":false,"message_data":[{"key":"1","value":"A"}]}}, {"id":"view-4-4","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-4","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"D","send_onrelease":false,"message_data":[{"key":"1","value":"D"}]}}, {"id":"view-4-7","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-7","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"G","send_onrelease":false,"message_data":[{"key":"1","value":"G"}]}}],"classes":[]},{"id":"view-4-section-1","elements":[{"id":"view-4-2","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-2","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"B","send_onrelease":false,"message_data":[{"key":"1","value":"B"}]}}, {"id":"view-4-5","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-5","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"E","send_onrelease":false,"message_data":[{"key":"1","value":"E"}]}}, {"id":"view-4-8","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-8","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"H","send_onrelease":false,"message_data":[{"key":"1","value":"H"}]}}],"classes":[]},{"id":"view-4-section-2","elements":[{"id":"view-4-3","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-3","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"C","send_onrelease":false,"message_data":[{"key":"1","value":"C"}]}}, {"id":"view-4-6","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-6","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"F","send_onrelease":false,"message_data":[{"key":"1","value":"F"}]}}, {"id":"view-4-9","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-4-9","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"I","send_onrelease":false,"message_data":[{"key":"1","value":"I"}]}}],"classes":[]}]},{"id":"view-5","sections":[{"id":"view-5-section-0","elements":[{"id":"view-5-1","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-5-1","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"A","send_onrelease":false,"message_data":[{"key":"1","value":"A"}]}}],"classes":[]},{"id":"view-5-section-1","elements":[{"id":"view-5-2","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-5-2","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"B","send_onrelease":false,"message_data":[{"key":"1","value":"B"}]}}],"classes":[]},{"id":"view-5-section-2","elements":[{"id":"view-5-3","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-5-3","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"C","send_onrelease":false,"message_data":[{"key":"1","value":"C"}]}}],"classes":[]},{"id":"view-5-section-3","elements":[{"id":"view-5-4","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-5-4","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"D","send_onrelease":false,"message_data":[{"key":"1","value":"D"}]}}],"classes":[]}]},{"id":"view-9","sections":[{"id":"view-9-section-0","elements":[{"id":"view-9-section-0-element-0","key":"button","name":"Button","tmpl":"button","constructor_fn":"ButtonElement","options":{"constructor_args":{},"attr_id":"view-9-section-0-element-0","css_classes":"button-300-150","view_action":{"target":null,"view_id":null},"label":"OK","send_onrelease":false,"message_data":[{"key":"1","value":"OK"}]}}],"classes":[]}]},{"id":"view-6","sections":[{"id":"view-6-section-0","elements":[],"classes":[]}]}, {"id":"view-10","sections":[{"id":"view-10-section-0","elements":[],"classes":[]}]}]}';
+        </script>
+
+
+    </div>
+
+    <!-- 3rd Party Libs -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="controller/libs/handlebars-v4.0.5.js"></script>
+    <!-- AIRCONSOLE -->
+    <script type="text/javascript" src="https://www.airconsole.com/api/airconsole-latest.js"></script>
+    <script type="text/javascript" src="controller/libs/airconsole_view_manager.js"></script>
+    <script type="text/javascript" src="view_manager.js"></script>
+    <!-- AIRCONSOLE CONTROLS -->
+    <script type="text/javascript" src="airconsole-controls/button/button.js"></script>
+    <script type="text/javascript" src="airconsole-controls/dpad/dpad.js"></script>
+    <script type="text/javascript" src="airconsole-controls/swipe-analog/swipe-analog.js"></script>
+    <script type="text/javascript" src="airconsole-controls/swipe-digital/swipe-digital.js"></script>
+    <!-- GENERATOR -->
+    <script type="text/javascript" src="controller/js/controller_generator.js"></script>
+    <script type="text/javascript" src="controller/js/main.js"></script>
+    <script type="text/javascript" src="airconsole-controls/keyboard/airconsole-keyboard.js"></script>
+    <script type="text/javascript">
+        var airconsole;
+        var vm = null;
+
+        function App() {
+            var me = this;
+            me.airconsole = new AirConsole({ "orientation": "landscape", "synchronize_time": "true" });
+
+            //initialize the view manager and set the first view
+            ViewManager.init();
+            ViewManager.show("view-0");
+
+            me.airconsole.onMessage = function (from, data) {
+                console.log("onMessage", from, data);
+                if (from == "0") {
+                    if (data != null) {
+                        if (data['realfake']) {
+                            if (data['realfake'] == "true") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was goed! &#9989 \r\n " + "Je hebt &#128175 nieuwe volgers &#128525 \r\n"  + "\r\n" + rf_pf[Math.floor(Math.random() * rf_pf.length)]
+                            }
+                            else if (data['realfake'] == "false") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was helaas fout &#128549 \r\n "  + "\r\n" + rf_nf[Math.floor(Math.random() * rf_nf.length)]
+                            }
+                        }
+                        if (data['matching']) {
+                            if (data['matching'] == "true") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was goed! &#9989 \r\n " + "Je hebt &#128175 nieuwe volgers &#128525 \r\n"  + "\r\n" + rf_pf[Math.floor(Math.random() * rf_pf.length)]
+                            }
+                            else if (data['matching'] == "false") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was helaas fout &#128549 \r\n "  + "\r\n" + rf_nf[Math.floor(Math.random() * rf_nf.length)]
+                            }
+                        }
+                        else if (data['source']) {
+                            if (data['source'] == "true") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was goed! &#9989 \r\n " + "Je hebt &#128175 nieuwe volgers &#128525 \r\n" + "\r\n" + s_pf[Math.floor(Math.random() * s_pf.length)]
+                            }
+                            else if (data['source'] == "false") {
+                                document.getElementById("feedback-header").innerHTML = "Jullie antwoord was helaas fout &#128549 \r\n "  + "\r\n" + s_nf[Math.floor(Math.random() * s_nf.length)]
+                            }
+                        }
+                        else if (data['headlines']) {
+                            document.getElementById("feedback-header").innerHTML = data['headlines']
+                        }
+                        else if (data['buttonNr']) {
+                            for (i = 9; i > data['buttonNr']; i--) {
+                                document.getElementById('view-4-' + i).style.visibility = 'hidden';
+                            }
+                            for (j = 1; j <= data['buttonNr']; j++) {
+                                document.getElementById('view-4-' + j).firstElementChild.style.color = "white";
+                            }
+                        }
+                        else if (data['hurryup']) {
+                            if (data['hurryup'] == "realfake") {
+                                document.getElementById("hurryup-rf").innerHTML = "De andere teams wachten op jullie antwoord &#9203";
+                            }
+                            else if (data['hurryup'] == "headlines") {
+                                document.getElementById("hurryup-h").innerHTML = "De andere teams wachten op jullie antwoord &#9203";
+                            }
+                            else if (data['hurryup'] == "headlines_choose") {
+                                document.getElementById("hurryup-hc").innerHTML = "De andere teams wachten op jullie antwoord &#9203";
+                            }
+                            else if (data['hurryup'] == "source") {
+                                document.getElementById("hurryup-s").innerHTML = "De andere teams wachten op jullie antwoord &#9203";
+                            }
+                            else if (data['hurryup'] == "matching") {
+                                document.getElementById("hurryup-m").innerHTML = "De andere teams wachten op jullie antwoord &#9203";
+                            }
+                        }
+                        else if (data["teamnames"]) {
+                            TeamName = data["teamnames"];
+                            document.getElementById("team-name").innerHTML = "Welkom! Uw teamnaam is " + TeamName + "&#128515";
+                            document.getElementById("view-1-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-2-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-3-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-4-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-5-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-6-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-7-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-8-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-9-team-name").innerHTML = "Team: " + TeamName;
+                            document.getElementById("view-10-team-name").innerHTML = "Team: " + TeamName;
+                        }
+                        else if (data["view"] == "view-10") {
+                            ViewManager.show("view-10");
+                        }
+                    }
+                }
+            };
+
+            me.airconsole.onReady = function (code) {
+                console.log("onReady", code);
+            };
+
+            text_message = function () {
+                var tx = document.getElementById("textfield1");
+                document.getElementById("headlineOK").style.color = "#ADEE00"
+                var message = {
+                    'headline': tx.textContent
+                }
+                me.airconsole.message(AirConsole.SCREEN, message);
+                tx.textContent = "";
+                document.getElementById("headlineOK").disableButton;
+                ViewManager.show("view-10");
+            }
+
+            me.airconsole.onCustomDeviceStateChange = function (device_id, device_data) {
+                console.log("onDeviceStateChange", device_id, device_data);
+                if (device_id == AirConsole.SCREEN) {
+                    if (device_data != null && device_data != "" && device_data["teamnames"] == null) {
+                        if (device_data == "view-2") {
+                            document.getElementById("view-2-section-0-element-0").firstElementChild.style.color = "white";
+                            document.getElementById("view-2-section-1-element-0").firstElementChild.style.color = "white";
+                            document.getElementById("hurryup-rf").innerHTML = "";
+                        }
+                        else if (device_data == "view-4") {
+                            document.getElementById("hurryup-hc").innerHTML = "";
+                            document.getElementById("view-4-1").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-2").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-3").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-4").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-5").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-6").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-7").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-8").firstElementChild.style.color = "white";
+                            document.getElementById("view-4-9").firstElementChild.style.color = "white";
+                        }
+                        else if (device_data == "view-7") {
+                            document.getElementById("view-7-section-0-element-0").firstElementChild.style.color = "white";
+                            document.getElementById("view-7-section-1-element-0").firstElementChild.style.color = "white";
+                            document.getElementById("hurryup-s").innerHTML = "";
+                        }
+                        else if (device_data == "view-8") {
+                            document.getElementById("hurryup-h").innerHTML = "";
+                        }
+                        else if (device_data == "view-9") {
+                            document.getElementById("view-9-section-0-element-0").firstElementChild.style.color = "white";
+                        }
+                        else if (device_data == "view-6") {
+                            document.getElementById("headlineOK").style.color = "white";
+                        }
+                        else if (device_data == "view-5") {
+                            document.getElementById("hurryup-m").innerHTML = "";
+                            document.getElementById('view-5-1').style.visibility = 'visible';
+                            document.getElementById('view-5-2').style.visibility = 'visible';
+                            document.getElementById('view-5-3').style.visibility = 'visible';
+                            document.getElementById('view-5-4').style.visibility = 'visible';
+                        }
+                        ViewManager.show(device_data);
+                    };
+                };
+            };
+
+            if (!("ontouchstart" in document.createElement("div"))) {
+                var elements = document.getElementsByTagName("*");
+                for (var i = 0; i < elements.length; ++i) {
+                    var element = elements[i];
+                    var ontouchstart = element.getAttribute("ontouchstart");
+                    if (ontouchstart) {
+                        element.setAttribute("onmousedown", ontouchstart);
+                    }
+                    var ontouchend = element.getAttribute("ontouchend");
+                    if (ontouchend) {
+                        element.setAttribute("onmouseup", ontouchend);
+                    }
+                }
+            };
+        };
+    </script>
+</body>
+</html>
